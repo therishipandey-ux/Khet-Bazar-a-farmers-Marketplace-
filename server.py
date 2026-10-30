@@ -15,9 +15,12 @@ TABLES = {'farmer': ('farmers', 'farmer_id'), 'customer': ('customers', 'custome
 NEXT = {'Pending': {'Confirmed', 'Cancelled'}, 'Confirmed': {'Delivered', 'Cancelled'}}
 
 SECRET_FILE = os.path.join(BASE, '.secret')
-if not os.path.exists(SECRET_FILE):
-    open(SECRET_FILE, 'w').write(secrets.token_hex(32))
-SECRET = open(SECRET_FILE).read().strip().encode()
+if os.environ.get('SECRET_KEY'):
+    SECRET = os.environ['SECRET_KEY'].encode()
+else:
+    if not os.path.exists(SECRET_FILE):
+        open(SECRET_FILE, 'w').write(secrets.token_hex(32))
+    SECRET = open(SECRET_FILE).read().strip().encode()
 
 
 class Err(Exception):
